@@ -4,15 +4,29 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    private int velocity;
+    [SerializeField] private Rigidbody2D rb;
+
+    private void Start()
     {
-        
+        velocity = 2;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        //rb.velocity = new Vector2(velocity, 0);
+
+
+        //foreach (Touch touch in Input.touches)
+        //{
+        //    if ()
+        //}
+    }
+
+    private void DetectSwipe()
+    {
+        //if(CheckDistance())
+
     }
 }
