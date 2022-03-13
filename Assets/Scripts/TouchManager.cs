@@ -12,6 +12,7 @@ public class TouchManager : MonoBehaviour
 
     private bool releaseSwipe = false;
 
+    [SerializeField] private Player playerRef;
     // Update is called once per frame
     void Update()
     {
@@ -63,7 +64,7 @@ public class TouchManager : MonoBehaviour
         switch (direction)
         {
             case SwipeDirection.Up:
-                print("Pulo");
+                playerRef.Jump();
                 break;
             case SwipeDirection.Down:
                 print("Slide");
@@ -75,7 +76,7 @@ public class TouchManager : MonoBehaviour
                 print("frente");
                 break;
         }
-        onSwipe(data);
+        onSwipe(data); //vale a pena manter? 
     }
     private bool IsVerticalSwipe()
     {
