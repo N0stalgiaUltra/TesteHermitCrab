@@ -61,22 +61,7 @@ public class TouchManager : MonoBehaviour
             EndPosition = fingerDownPos
         };
 
-        switch (direction)
-        {
-            case SwipeDirection.Up:
-                playerRef.Jump();
-                break;
-            case SwipeDirection.Down:
-                print("Slide");
-                break;
-            case SwipeDirection.Left:
-                print("left");
-                break;
-            case SwipeDirection.Right:
-                print("frente");
-                break;
-        }
-        onSwipe(data); //vale a pena manter? 
+        onSwipe(data); 
     }
     private bool IsVerticalSwipe()
     {
