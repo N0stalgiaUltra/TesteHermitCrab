@@ -7,50 +7,67 @@ public class Player : MonoBehaviour
 
     private int velocity;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Animator animator;
+    [SerializeField] private Animator animator;// StartRun, Jump, Slide, Dead
     [SerializeField] private PlayerState currentState;
 
-    private bool isGrounded;
+    [SerializeField] private bool isGrounded;
 
     private void Start()
     {
         velocity = 2;
         currentState = PlayerState.IDLE;
         isGrounded = true;
+
+        Time.fixedDeltaTime = Time.deltaTime * 5f;
+
     }
 
     private void Update()
     {
-        //switch (this.currentState)
-        //{
-        //    case PlayerState.RUN:
-        //        break;
-        //    case PlayerState.JUMP:
-        //        Jump();
-        //        break;
-        //    case PlayerState.SLIDE:
-        //        break;
-        //    case PlayerState.DEAD:
-        //        break;
-        //}
-    }
 
-    private void Run()
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+#endif
+
+    }
+    private void FixedUpdate()
     {
-
+        //if(currentState == PlayerState.RUN)
+        if (isGrounded)
+        {
+            animator.SetTrigger("StartRun");
+            currentState = PlayerState.RUN;
+        }
+        //rb.velocity = new Vector2(velocity * Time.time * .15f, rb.velocity.y); //movimento do player
     }
+
     public void Jump()
     {
-        if(isGrounded)
+        if (isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, velocity * Time.deltaTime);
+            //animator.SetBool("Jump", true);
+            animator.SetTrigger("Jump");
+            rb.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
             isGrounded = false;
             currentState = PlayerState.JUMP;
+            
         }
+        else
+        {
+            //print("não grounded");
+        }
+
     }
     private void Slide()
     {
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Chao")
+            isGrounded = true;
     }
 
     public enum PlayerState
