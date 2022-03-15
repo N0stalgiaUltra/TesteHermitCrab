@@ -10,8 +10,10 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private Animator animator;// StartRun, Jump, Slide, Dead
+    
     private PlayerState currentState;
     private bool isGrounded;
+    private bool isGameStarted;
 
     public enum PlayerState
     {
@@ -26,10 +28,9 @@ public class Player : MonoBehaviour
     {
         currentState = PlayerState.IDLE;
         isGrounded = true;
+        isGameStarted = false;
 
         TouchManager.onSwipe += TouchManager_onSwipe;
-
-        StartGame();
     }
 
     #region Subscribe no evento de swipe
@@ -64,12 +65,17 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        GameManager.instance.score += 1;
-        rb.velocity = new Vector2(velocity, rb.velocity.y);
+        if(isGameStarted)
+        {
+            GameManager.instance.score += 1;
+            rb.velocity = new Vector2(velocity, rb.velocity.y);
+        }
+        
     }
 
     public void StartGame()
     {
+        isGameStarted = true;
         animator.SetTrigger("StartRun");
         currentState = PlayerState.RUN;
     }
@@ -111,8 +117,18 @@ public class Player : MonoBehaviour
 
     private void Dead()
     {
-        
+        isGameStarted = false;
+        StartCoroutine(GameOver());
     }
+    
+    private IEnumerator GameOver()
+    {
+        animator.SetTrigger("Dead");
+        currentState = PlayerState.DEAD;
+        yield return new WaitForSeconds(1f);
+        GameManager.instance.GameOver();
+    }
+
     #endregion
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -126,7 +142,7 @@ public class Player : MonoBehaviour
         if(collision.gameObject.tag == "Coin")
         {
             Destroy(collision.gameObject);
-            GameManager.instance.score += 10;
+            GameManager.instance.score += 100;
         }
     }
 
