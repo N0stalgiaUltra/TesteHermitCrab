@@ -5,15 +5,21 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    private int velocity;
+    [SerializeField] private int velocity;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private Animator animator;// StartRun, Jump, Slide, Dead
-    [SerializeField] private PlayerState currentState;
+    private PlayerState currentState;
+    private bool isGrounded;
 
-    [SerializeField] private bool isGrounded;
-    private bool isSliding;
-    public float contador = 0;
+    public enum PlayerState
+    {
+        IDLE,
+        RUN,
+        JUMP,
+        SLIDE,
+        DEAD
+    }
 
     private void Start()
     {
@@ -21,11 +27,11 @@ public class Player : MonoBehaviour
         currentState = PlayerState.IDLE;
         isGrounded = true;
 
-        Time.fixedDeltaTime = Time.deltaTime * 5f;
         TouchManager.onSwipe += TouchManager_onSwipe;
 
         StartGame();
     }
+
     #region Subscribe no evento de swipe
 
     private void TouchManager_onSwipe(TouchManager.SwipeData obj)
@@ -58,9 +64,8 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
-
-        //movimentar aqui
-
+        rb.velocity += new Vector2(Time.fixedDeltaTime * velocity, 0);
+        //rb.AddForce(new Vector2(velocity * Time.fixedDeltaTime, 0), ForceMode2D.Force);
     }
 
     public void StartGame()
@@ -68,20 +73,19 @@ public class Player : MonoBehaviour
         animator.SetTrigger("StartRun");
         currentState = PlayerState.RUN;
     }
+
+    #region Ações do Jogador
     public void Jump()
     {
         if (isGrounded)
         {
-            //animator.SetBool("Jump", true);
             animator.SetTrigger("Jump");
-            rb.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * 8, ForceMode2D.Impulse);
             isGrounded = false;
             currentState = PlayerState.JUMP;
-
         }
         else
             return;
-
     }
     private void Slide()
     {
@@ -93,7 +97,6 @@ public class Player : MonoBehaviour
     }
     private IEnumerator SlideCoroutine()
     {
-        contador += Time.deltaTime;
         animator.SetTrigger("Slide");
         currentState = PlayerState.SLIDE;
         boxCollider2D.size = new Vector2(boxCollider2D.size.x, 2.5f);
@@ -106,21 +109,22 @@ public class Player : MonoBehaviour
         boxCollider2D.offset = new Vector2(boxCollider2D.offset.x, -0.05f);
     }
 
+    private void Dead()
+    {
+        //avisa ao game manager que acabou o jogo
+        //
+    }
+    #endregion
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Chao")
             isGrounded = true;
+
+        if (collision.gameObject.tag == "Trap")
+            Dead();
     }
 
-    public enum PlayerState
-    {
-        IDLE,
-        RUN,
-        JUMP,
-        SLIDE,
-        DEAD
-    }
+    
 
-    public PlayerState CurrentState { get => this.currentState; set => value = this.currentState;}
 }

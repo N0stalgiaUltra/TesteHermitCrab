@@ -40,16 +40,8 @@ public class TouchManager : MonoBehaviour
     {
         if(CheckDistance())
         {
-            if (IsVerticalSwipe())
-            {
-                SwipeDirection direction = fingerDownPos.y - fingerUpPos.y > 0 ? SwipeDirection.Up : SwipeDirection.Down;
-                SendSwipe(direction);
-            }
-            else
-            {
-                SwipeDirection direction = fingerDownPos.x - fingerUpPos.x > 0 ? SwipeDirection.Right : SwipeDirection.Left;
-                SendSwipe(direction);
-            }
+            SwipeDirection direction = fingerDownPos.y - fingerUpPos.y > 0 ? SwipeDirection.Up : SwipeDirection.Down;
+            SendSwipe(direction);
         }
     }
     private void SendSwipe(SwipeDirection direction)
@@ -63,20 +55,12 @@ public class TouchManager : MonoBehaviour
 
         onSwipe(data); 
     }
-    private bool IsVerticalSwipe()
-    {
-        return VerticalMoveDistance() > HorizontalMoveDistance();
-    }
 
     private bool CheckDistance()
     {
-        return VerticalMoveDistance() > pixelDistToDetect || HorizontalMoveDistance() > pixelDistToDetect;
+        return VerticalMoveDistance() > pixelDistToDetect;
     }
 
-    private float HorizontalMoveDistance()
-    {
-        return Mathf.Abs(fingerDownPos.x - fingerUpPos.x);
-    }
     private float VerticalMoveDistance()
     {
         return Mathf.Abs(fingerDownPos.y - fingerUpPos.y);
@@ -84,7 +68,7 @@ public class TouchManager : MonoBehaviour
 
     public enum SwipeDirection
     {
-        Up,Down,Left,Right
+        Up,Down
     }
     public struct SwipeData
     {
