@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    [SerializeField] private int velocity;
+    [SerializeField] private float velocity;
+    [SerializeField] private float jumpForce;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private Animator animator;// StartRun, Jump, Slide, Dead
@@ -23,7 +24,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        velocity = 2;
         currentState = PlayerState.IDLE;
         isGrounded = true;
 
@@ -64,8 +64,8 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        rb.velocity += new Vector2(Time.fixedDeltaTime * velocity, 0);
-        //rb.AddForce(new Vector2(velocity * Time.fixedDeltaTime, 0), ForceMode2D.Force);
+        GameManager.instance.score += 1;
+        rb.velocity = new Vector2(velocity, rb.velocity.y);
     }
 
     public void StartGame()
@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
         if (isGrounded)
         {
             animator.SetTrigger("Jump");
-            rb.AddForce(Vector2.up * 8, ForceMode2D.Impulse);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             isGrounded = false;
             currentState = PlayerState.JUMP;
         }
@@ -111,8 +111,7 @@ public class Player : MonoBehaviour
 
     private void Dead()
     {
-        //avisa ao game manager que acabou o jogo
-        //
+        
     }
     #endregion
 
@@ -123,6 +122,12 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.tag == "Trap")
             Dead();
+
+        if(collision.gameObject.tag == "Coin")
+        {
+            Destroy(collision.gameObject);
+            GameManager.instance.score += 10;
+        }
     }
 
     

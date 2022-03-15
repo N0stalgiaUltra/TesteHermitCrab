@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Spike
   - Chao
+  - Trap
+  - Coin
   layers:
   - Default
   - TransparentFX
