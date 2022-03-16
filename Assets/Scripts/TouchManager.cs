@@ -22,7 +22,9 @@ public class TouchManager : MonoBehaviour
             {
                 fingerUpPos = touch.position;
                 fingerDownPos = touch.position;
-                GameManager.instance.GameStart();
+                
+                if(!GameManager.isGameStarted)
+                    GameManager.instance.GameStart();
             }
             if (!releaseSwipe && touch.phase == TouchPhase.Moved)
             {

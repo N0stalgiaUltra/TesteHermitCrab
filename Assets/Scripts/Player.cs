@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
     
     private PlayerState currentState;
     private bool isGrounded;
-    private bool isGameStarted;
 
     public enum PlayerState
     {
@@ -28,8 +27,6 @@ public class Player : MonoBehaviour
     {
         currentState = PlayerState.IDLE;
         isGrounded = true;
-        isGameStarted = false;
-
         TouchManager.onSwipe += TouchManager_onSwipe;
     }
 
@@ -65,7 +62,7 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if(isGameStarted)
+        if (GameManager.isGameStarted)
         {
             GameManager.instance.score += 1;
             rb.velocity = new Vector2(velocity, rb.velocity.y);
@@ -75,7 +72,6 @@ public class Player : MonoBehaviour
 
     public void StartGame()
     {
-        isGameStarted = true;
         animator.SetTrigger("StartRun");
         currentState = PlayerState.RUN;
     }
@@ -108,7 +104,7 @@ public class Player : MonoBehaviour
         boxCollider2D.size = new Vector2(boxCollider2D.size.x, 2.5f);
         boxCollider2D.offset = new Vector2(boxCollider2D.offset.x, -1f);
         
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
 
         currentState = PlayerState.RUN;
         boxCollider2D.size = new Vector2(boxCollider2D.size.x, 4.5f);
@@ -117,7 +113,6 @@ public class Player : MonoBehaviour
 
     private void Dead()
     {
-        isGameStarted = false;
         StartCoroutine(GameOver());
     }
     
@@ -146,6 +141,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Chao")
+            isGrounded = false;
+    }
+
+
 
 }

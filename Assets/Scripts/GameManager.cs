@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Player playerRef;
 
+    public static bool isGameStarted;
 
     #region Singleton
     public static GameManager instance;
@@ -38,10 +39,12 @@ public class GameManager : MonoBehaviour
         highScoreText.text = $"highscore: {highScore}";
     }
     public void GameStart() {
+        isGameStarted = true;
         playerRef.StartGame();
     }
 
     public void GameOver() {
+        isGameStarted = false;
         if(score > highScore)
         {
             highScore = score;
