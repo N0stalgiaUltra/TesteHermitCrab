@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
     public void GameStart() {
         startText.gameObject.SetActive(false);
         isGameStarted = true;
+        AnalyticsEvent.LevelStart("game");
         playerRef.StartGame();
     }
 
@@ -62,9 +64,16 @@ public class GameManager : MonoBehaviour
 
 
         if (win)
+        {
             title.text = "YOU WIN!";
+            AnalyticsEvent.LevelComplete("game");
+        }
         else
+        {
             title.text = "GAME OVER";
+            var result = AnalyticsEvent.LevelFail("game");
+            Debug.Log(result);
+        }
 
         isGameStarted = false;
         if (score > highScore)

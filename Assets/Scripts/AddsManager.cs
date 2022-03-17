@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Advertisements;
 
 public class AddsManager : MonoBehaviour
-{ 
+{
 #if UNITY_ANDROID
     private string gameId = "4656545";
 #else
@@ -23,7 +23,7 @@ public class AddsManager : MonoBehaviour
 
     private void Start()
     {
-       Advertisement.Initialize(gameId);
+        Advertisement.Initialize(gameId);
     }
 
     public void PlayAd()
