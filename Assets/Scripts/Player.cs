@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
     {
         if (GameManager.isGameStarted)
         {
-            GameManager.instance.score += 1;
+            GameManager.instance.Score += 1;
             rb.velocity = new Vector2(velocity, rb.velocity.y);
         }
         
@@ -137,7 +137,7 @@ public class Player : MonoBehaviour
         if(collision.gameObject.tag == "Coin")
         {
             Destroy(collision.gameObject);
-            GameManager.instance.score += 100;
+            GameManager.instance.Score += 100;
         }
     }
 
