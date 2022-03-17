@@ -58,22 +58,34 @@ public class GameManager : MonoBehaviour
 
     public void GameOver(bool win) {
 
+        StartCoroutine(StartAdd());
+
+
         if (win)
             title.text = "YOU WIN!";
         else
             title.text = "GAME OVER";
-        
+
         isGameStarted = false;
-        if(score > highScore)
+        if (score > highScore)
         {
             highScore = score;
             PlayerPrefs.SetInt("highscore", highScore);
             PlayerPrefs.Save();
         }
         gameOverScreen.SetActive(true);
+
         //abrir tela de gameover
     }
     
+    IEnumerator StartAdd()
+    {
+        AddsManager.instance.PlayAd();
+        yield return new WaitForSeconds(1f);
+        
+    }
+
+
     public void Restart() {
         isGameStarted = false;
         SceneManager.LoadScene(1);
