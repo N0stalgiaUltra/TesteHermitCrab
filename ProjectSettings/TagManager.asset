@@ -8,6 +8,7 @@ TagManager:
   - Chao
   - Trap
   - Coin
+  - Win
   layers:
   - Default
   - TransparentFX

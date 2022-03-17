@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
         animator.SetTrigger("Dead");
         currentState = PlayerState.DEAD;
         yield return new WaitForSeconds(1f);
-        GameManager.instance.GameOver();
+        GameManager.instance.GameOver(false);
     }
 
     #endregion
@@ -139,6 +139,9 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);
             GameManager.instance.Score += 100;
         }
+
+        if (collision.gameObject.tag == "Win")
+            GameManager.instance.GameOver(true);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
